@@ -12,7 +12,7 @@ builder.Services.AddDbContext<JobContext>(opt =>
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new() { Title = "TodoApi", Version = "v1" });
+    c.SwaggerDoc("v1", new() { Title = "JobTrackerApi", Version = "v1" });
 });
 
 var app = builder.Build();
