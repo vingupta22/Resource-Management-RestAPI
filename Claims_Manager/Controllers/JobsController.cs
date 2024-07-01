@@ -9,7 +9,7 @@ using Claims_Manager.Models;
 
 namespace Claims_Manager.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class JobsController : ControllerBase
     {
@@ -22,12 +22,19 @@ namespace Claims_Manager.Controllers
 
         // GET: api/Jobs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Job>>> GetTodoItems()
+        public async Task<ActionResult<IEnumerable<Job>>> GetJobItems()
         {
           if (_context.TodoItems == null)
           {
               return NotFound();
           }
+
+            foreach (var entity in _context.ChangeTracker.Entries().ToList())
+            {
+                _context.Entry(entity.Entity).State = EntityState.Detached;
+            }
+
+
             return await _context.TodoItems.ToListAsync();
         }
 
@@ -46,6 +53,7 @@ namespace Claims_Manager.Controllers
                 return NotFound();
             }
 
+            
             return job;
         }
 
@@ -96,6 +104,69 @@ namespace Claims_Manager.Controllers
             // return CreatedAtAction("GetJob", new { id = job.Id }, job);
 
             return CreatedAtAction(nameof(PostJob), new { id = job.Id }, job);
+        }
+
+        // POST: api/Jobs/1
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Job>> UpdateClaimsProcessed(int id)
+        {
+            var job = await _context.TodoItems.FirstOrDefaultAsync(j => j.Id == id);
+            if (job == null)
+            {
+                return Problem("Entity set 'JobContext.TodoItems'  is null.");
+            }
+            job.claimsProcessed++; // Increment claimsProcessed
+
+            await _context.SaveChangesAsync(); // Save changes to database
+
+            return CreatedAtAction(nameof(UpdateClaimsProcessed), new { id }, job);
+        }
+
+        // POST: api/Jobs
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Job>> UpdateCpuUsage(int id, int NewUsage)
+        {
+            var job = await _context.TodoItems.FirstOrDefaultAsync(j => j.Id == id);
+            if (job == null)
+            {
+                return Problem("Entity set 'JobContext.TodoItems'  is null.");
+            }
+            job.cpuUsage += NewUsage;
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(PostJob), id, job);
+            
+        }
+
+        // POST: api/Jobs
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Job>> UpdateMemoryUsage(int id, int NewUsage)
+        {
+            var job = await _context.TodoItems.FirstOrDefaultAsync(j => j.Id == id);
+            if (job == null)
+            {
+                return Problem("Entity set 'JobContext.TodoItems'  is null.");
+            }
+            job.memoryUsage += NewUsage;
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(PostJob), id, job);
+        }
+
+        // POST: api/Jobs
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Job>> EndJob(int id)
+        {
+            var job = await _context.TodoItems.FirstOrDefaultAsync(j => j.Id == id);
+            if (job == null)
+            {
+                return Problem("Entity set 'JobContext.TodoItems'  is null.");
+            }
+            job.endJob();
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(PostJob), id, job);
         }
 
         // DELETE: api/Jobs/5
