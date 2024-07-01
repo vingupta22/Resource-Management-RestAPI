@@ -15,6 +15,7 @@ namespace Claims_Manager.Models
      */
     public class Job
     {
+        public long Id { get; set; }
         // Is the service currently running
         public bool runningStatus { get; set; }
 
