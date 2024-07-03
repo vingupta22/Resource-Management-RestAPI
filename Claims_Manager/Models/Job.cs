@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.Collections;
+using Cassandra.Mapping.Attributes;
+
 
 namespace Claims_Manager.Models
 {
