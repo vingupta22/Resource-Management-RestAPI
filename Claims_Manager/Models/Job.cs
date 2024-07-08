@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.Collections;
 using Cassandra.Mapping.Attributes;
+using MongoDB.Bson.Serialization.Attributes;
 
 
 namespace Claims_Manager.Models
@@ -17,23 +18,33 @@ namespace Claims_Manager.Models
      */
     public class Job
     {
-        public long Id { get; set; }
+        [BsonId]
+        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+        public string Id { get; set; }
         // Is the service currently running
+        [BsonElement("runningStatus")]
         public bool runningStatus { get; set; }
 
         // Timestamp for when the service starts
+        [BsonElement("startTime")]
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime startTime { get; set; }
 
         // Timestamp for when the service ends
+        [BsonElement("endTime")]
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime endTime { get; set; }
 
         // Placeholder type, should capture cpu used to process claims
+        [BsonElement("cpuUsage")]
         public double? cpuUsage { get; set; }
 
         // Placeholder type, should capture memory used to process claims
+        [BsonElement("memoryUsage")]
         public double? memoryUsage { get; set; }
 
         // Claims processed
+        [BsonElement("claimsProcessed")]
         public int? claimsProcessed { get; set; }
 
         public Job()
