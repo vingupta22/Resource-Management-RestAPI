@@ -16,11 +16,12 @@ namespace Claims_Manager.Models
      * Other stats could be most frequent services, services using most cpu/mem
      * and average cpu/mem per service instead of job
      */
+    [BsonIgnoreExtraElements]
     public class Job
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id { get; set; }
+        public String Id { get; set; }
         // Is the service currently running
         [BsonElement("runningStatus")]
         public bool runningStatus { get; set; }
@@ -49,6 +50,7 @@ namespace Claims_Manager.Models
 
         public Job()
         {
+            Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString();
             runningStatus = true;
             startTime = DateTime.Now; // datetime object in current local time
             cpuUsage = 0;
