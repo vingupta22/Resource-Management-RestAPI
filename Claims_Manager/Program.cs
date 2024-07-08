@@ -1,13 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using Claims_Manager.Models;
+using Claims_Manager.Services;
+using MongoDB.Driver;
+using MongoDB.Bson;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.Configure<JobTrackerDatabaseSettings>(builder.Configuration.GetSection("JobTrackerDatabase"));
+
+builder.Services.AddSingleton<JobsService>();
+
 builder.Services.AddControllers();
-builder.Services.AddDbContext<JobContext>(opt =>
-    opt.UseInMemoryDatabase("TodoList"));
+// builder.Services.AddDbContext<JobContext>(opt =>
+// opt.UseInMemoryDatabase("TodoList"));
 
 
 builder.Services.AddSwaggerGen(c =>
